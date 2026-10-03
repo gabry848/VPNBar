@@ -1,0 +1,91 @@
+# SwiftPM, Xcode e artefatti compilati
+.build/
+/build/
+.swiftpm/
+DerivedData/
+xcuserdata/
+*.xcuserstate
+*.app/
+*.dSYM/
+*.dmg
+*.pkg
+*.ipa
+*.xcarchive/
+*.profraw
+*.profdata
+
+# Binario scaricato da scripts/fetch-cloudflared.sh
+/Resources/bin/cloudflared
+
+# Profili VPN, certificati e chiavi personali
+/profiles/
+*.ovpn
+*.conf
+*.tblk/
+*.wg
+*.key
+*.pem
+*.p12
+*.pfx
+*.crt
+*.cer
+*.csr
+*.mobileprovision
+*.provisionprofile
+
+# Credenziali e configurazione privata
+.env
+.env.*
+!.env.example
+!.env.sample
+/credentials/
+/secrets/
+.cloudflared/
+.aws/
+credentials.json
+credentials-*.json
+*-credentials.json
+credentials*.txt
+auth.txt
+auth-user-pass*
+????????-????-????-????-????????????.json
+
+# Dati runtime di VPNBar e copie locali dei backup di rete
+/VPNBarData/
+/Library/Application Support/VPNBar/
+/Library/Application Support/VPNBarNetwork/
+settings.json
+dns-backup.json
+request-*.json
+reply-*.json
+share-*.yml
+share-*.yaml
+
+# Prove locali, log e file temporanei
+/evidence/
+*.log
+*.tmp
+*.temp
+*.bak
+*.orig
+*.swp
+*.swo
+*~
+
+# macOS e impostazioni locali degli editor
+.DS_Store
+._*
+.AppleDouble/
+.LSOverride
+.Spotlight-V100/
+.Trashes/
+.idea/
+.vscode/
+
+# Stato locale degli agenti AI
+.pi/
+.agents/
+.claude/
+.codex/
+.cursor/
+.windsurf/

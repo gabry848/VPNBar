@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0"><dict>
+<key>CFBundleExecutable</key><string>VPNBar</string>
+<key>CFBundleIdentifier</key><string>local.vpnbar.app</string>
+<key>CFBundleName</key><string>VPNBar</string>
+<key>CFBundleDisplayName</key><string>VPNBar</string>
+<key>CFBundlePackageType</key><string>APPL</string>
+<key>CFBundleShortVersionString</key><string>0.2.0</string>
+<key>CFBundleVersion</key><string>2</string>
+<key>LSMinimumSystemVersion</key><string>14.0</string>
+<key>LSUIElement</key><true/>
+<key>CFBundleURLTypes</key><array><dict>
+<key>CFBundleURLName</key><string>local.vpnbar.control</string>
+<key>CFBundleURLSchemes</key><array><string>vpnbar</string></array>
+</dict></array>
+<key>NSAppleEventsUsageDescription</key><string>VPNBar controlla Tunnelblick per connettere i tuoi profili VPN e leggerne lo stato.</string>
+</dict></plist>
