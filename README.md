@@ -1,86 +1,88 @@
 # VPNBar
 
-App nativa per macOS, scritta in Swift e SwiftUI, per controllare profili OpenVPN tramite Tunnelblick dalla barra dei menu. Include statistiche del traffico, strumenti DNS, domini locali, una CLI e condivisione di servizi locali tramite Cloudflare Tunnel.
+A native macOS app built with Swift and SwiftUI for managing OpenVPN profiles through Tunnelblick from the menu bar. It includes traffic statistics, DNS tools, local domains, a CLI, and local service sharing through Cloudflare Tunnel.
 
-## Funzioni
+## Features
 
-- Connessione, disconnessione e scelta dei server da un popover, senza icona nel Dock.
-- Ricerca per paese, IP pubblico, ping, grafico del traffico e speed test tramite `networkQuality`.
-- Preset DNS AdGuard, Quad9 e Cloudflare, oppure indirizzi personalizzati.
-- Associazioni di domini `.test` a indirizzi IPv4 o IPv6 in `/etc/hosts`.
-- CLI `vpnbar` e tre Comandi Rapidi per connettere, disconnettere e copiare l’IP.
-- Condivisione di localhost tramite un link HTTPS temporaneo o un tunnel Cloudflare personale.
+- Connect, disconnect, and choose servers from a popover, without a Dock icon.
+- Search by country, check your public IP and ping, view a traffic chart, and run a speed test with `networkQuality`.
+- Use AdGuard, Quad9, or Cloudflare DNS presets, or enter custom addresses.
+- Map `.test` domains to IPv4 or IPv6 addresses in `/etc/hosts`.
+- Use the `vpnbar` CLI and three Shortcuts to connect, disconnect, and copy your IP address.
+- Share localhost through a temporary HTTPS link or your own Cloudflare tunnel.
 
-## Requisiti
+## Requirements
 
-- macOS 14 o successivo.
-- Toolchain Swift 6 o successiva, fornita da una versione compatibile di Xcode o dei Command Line Tools.
-- [Tunnelblick](https://tunnelblick.net/downloads.html) installato e configurato per le funzioni VPN.
-- Profili OpenVPN e relative credenziali del proprio provider; l’interfaccia è predisposta per i paesi del catalogo Proton.
-- Connessione Internet per scaricare `cloudflared` e usare i servizi online.
+- macOS 14 or later.
+- Swift 6 or later, provided by a compatible version of Xcode or the Command Line Tools.
+- [Tunnelblick](https://tunnelblick.net/downloads.html) installed and configured for VPN features.
+- OpenVPN profiles and credentials from your VPN provider. The interface includes countries from Proton's server catalog.
+- An internet connection to download `cloudflared` and use online services.
 
-Non ci sono dipendenze Swift esterne. `cloudflared` è necessario solo per la condivisione di servizi locali.
+There are no external Swift dependencies. `cloudflared` is only needed for sharing local services.
 
-## Setup e compilazione
+The app and bundled Shortcuts currently use Italian labels. This guide quotes those labels exactly so you can find the corresponding controls.
 
-### 1. Prepara gli strumenti e clona la repository
+## Setup and build
 
-Se mancano i Command Line Tools, installali con `xcode-select --install`. Verifica che il compilatore selezionato sia Swift 6 o successivo:
+### 1. Prepare the tools and clone the repository
+
+If the Command Line Tools are missing, install them with `xcode-select --install`. Check that the selected Swift compiler is version 6 or later:
 
 ```sh
 swift --version
 xcrun --find swift
 ```
 
-Clona la repository:
+Clone the repository:
 
 ```sh
 git clone https://github.com/gabry848/VPNBar.git
 cd VPNBar
 ```
 
-### 2. Scarica il componente per le condivisioni
+### 2. Download the sharing component
 
 ```sh
 zsh scripts/fetch-cloudflared.sh
 ```
 
-Lo script scarica la versione fissata nel progetto (`2026.9.3`) dagli asset ufficiali Cloudflare su GitHub, seleziona il binario per Apple Silicon o Intel e ne verifica il checksum SHA-256 prima dell’estrazione. Il risultato è `Resources/bin/cloudflared`, escluso da Git. Puoi saltare questo passaggio se non usi **Condividi**.
+The script downloads the version pinned by this project (`2026.9.3`) from Cloudflare's official GitHub release assets, selects the Apple Silicon or Intel binary, and verifies its SHA-256 checksum before extraction. The resulting `Resources/bin/cloudflared` file is excluded from Git. You can skip this step if you do not use **Condividi** (Share).
 
-### 3. Compila e installa
+### 3. Build and install
 
 ```sh
 zsh scripts/build.sh
 ```
 
-Il bundle viene creato in `build/VPNBar.app`, con la CLI e gli helper inclusi. La compilazione usa `.build/` per le cache e firma l’app localmente con una firma ad hoc.
+The script creates `build/VPNBar.app` with the CLI and helper executables included. It uses `.build/` for build caches and signs the app locally with an ad hoc signature.
 
-Sposta `build/VPNBar.app` in `/Applications` e aprila. L’app compare nella barra dei menu. L’installazione in `/Applications/VPNBar.app` è necessaria per i percorsi usati dai Comandi Rapidi inclusi.
+Move `build/VPNBar.app` to `/Applications` and open it. The app appears in the menu bar. Installation at `/Applications/VPNBar.app` is required by the paths used in the bundled Shortcuts.
 
-Il bundle compilato localmente non è notarizzato. Lo script di compilazione non installa l’app e non modifica le impostazioni di rete.
+The locally built app is not notarized. The build script does not install the app or change network settings.
 
-### 4. Configura Tunnelblick e i profili VPN
+### 4. Configure Tunnelblick and VPN profiles
 
-1. Installa Tunnelblick dal sito ufficiale e avvialo.
-2. Scarica i profili OpenVPN del tuo provider in una cartella privata. Per Proton, segui la [guida al download](https://protonvpn.com/support/vpn-config-download), selezionando la piattaforma macOS e il protocollo desiderato.
-3. Prima dell’importazione, assegna a ogni file un nome nel formato `VPNBar-<PAESE>-<SERVER>.ovpn`, per esempio `VPNBar-NL-SERVER01.ovpn`.
-4. Importa i file trascinandoli sull’icona di Tunnelblick e verifica che le configurazioni installate conservino quei nomi. Consulta la [guida di Tunnelblick](https://tunnelblick.net/cConfigT.html) per i dettagli.
-5. Prova una connessione direttamente da Tunnelblick e inserisci le credenziali OpenVPN. Per Proton sono diverse dalla password dell’account: vedi la [guida Proton per Tunnelblick](https://protonvpn.com/support/mac-vpn-setup). Salvale nel Portachiavi tramite Tunnelblick.
-6. Apri VPNBar e premi **Abilita controllo VPN**. Consenti l’automazione di Tunnelblick nella richiesta di macOS.
+1. Install Tunnelblick from its official website and launch it.
+2. Download your provider's OpenVPN profiles into a private folder. For Proton, follow the [profile download guide](https://protonvpn.com/support/vpn-config-download) and select macOS and your preferred protocol.
+3. Before importing each file, name it `VPNBar-<COUNTRY>-<SERVER>.ovpn`, for example `VPNBar-NL-SERVER01.ovpn`.
+4. Drag the files onto the Tunnelblick icon to import them, and check that the installed configurations keep those names. See the [Tunnelblick configuration guide](https://tunnelblick.net/cConfigT.html) for details.
+5. Test a connection directly in Tunnelblick and enter your OpenVPN credentials. Proton's OpenVPN credentials differ from your account password; see the [Proton guide for Tunnelblick](https://protonvpn.com/support/mac-vpn-setup). Save them in Keychain through Tunnelblick.
+6. Open VPNBar and click **Abilita controllo VPN** (Enable VPN control). Allow automation of Tunnelblick when macOS asks.
 
-Se il consenso è stato negato, controlla **Impostazioni di Sistema → Privacy e sicurezza → Automazione**.
+If you previously denied access, check **System Settings → Privacy & Security → Automation**.
 
-Il catalogo dell’app riconosce i codici `CA`, `CH`, `JP`, `MX`, `NL`, `NO`, `PL`, `RO`, `SG` e `US`. Un paese è disponibile soltanto se è installato almeno un profilo riconosciuto; la disponibilità dei server dipende dal provider e dal proprio piano. I profili con nomi diversi non vengono gestiti da VPNBar. Una configurazione estranea attiva in Tunnelblick impedisce il cambio server.
+The app recognizes the country codes `CA`, `CH`, `JP`, `MX`, `NL`, `NO`, `PL`, `RO`, `SG`, and `US`. A country is available only when at least one recognized profile is installed; server availability depends on your provider and plan. VPNBar does not manage profiles with other names. If an unrelated Tunnelblick configuration is active, VPNBar cannot switch servers.
 
-## CLI e Comandi Rapidi
+## CLI and Shortcuts
 
-Nel pannello aperto dall’icona terminale puoi creare il collegamento `~/.local/bin/vpnbar`. Se necessario, aggiungi `~/.local/bin` al `PATH` nel tuo `~/.zshrc`:
+From the panel opened by the terminal icon, you can create a link at `~/.local/bin/vpnbar`. If needed, add `~/.local/bin` to the `PATH` in your `~/.zshrc`:
 
 ```sh
 export PATH="$HOME/.local/bin:$PATH"
 ```
 
-In alternativa usa direttamente `/Applications/VPNBar.app/Contents/Helpers/vpnbar`.
+Alternatively, run `/Applications/VPNBar.app/Contents/Helpers/vpnbar` directly.
 
 ```sh
 vpnbar --help
@@ -92,57 +94,57 @@ vpnbar copy-ip
 vpnbar dns adguard
 vpnbar dns custom 1.1.1.1,1.0.0.1
 vpnbar dns system
-vpnbar domain add api.progetto.test 127.0.0.1
+vpnbar domain add api.project.test 127.0.0.1
 vpnbar domains --json
-vpnbar domain remove api.progetto.test
+vpnbar domain remove api.project.test
 vpnbar share http://localhost:3000
 vpnbar share status
 vpnbar share stop
 ```
 
-La CLI comunica con la stessa app; il controllo VPN deve essere stato abilitato prima di connettersi. DNS e domini richiedono il consenso amministratore di macOS.
+The CLI communicates with the running app. VPN control must be enabled before connecting. DNS and domain changes require macOS administrator approval.
 
-I file in `Resources/Shortcuts/` possono essere importati in Comandi Rapidi anche dal pannello dell’app: **Connetti VPN**, **Disconnetti VPN** e **Copia IP VPN**. Il comando di connessione usa `NL`, modificabile nel collegamento. Se richiesto, abilita l’esecuzione degli script nelle impostazioni avanzate di Comandi Rapidi.
+You can import the files in `Resources/Shortcuts/` into Shortcuts, including from the app panel: **Connetti VPN** (Connect VPN), **Disconnetti VPN** (Disconnect VPN), and **Copia IP VPN** (Copy VPN IP). The connection Shortcut uses `NL`; you can edit that value in the Shortcut. If prompted, allow scripts to run in Shortcuts' advanced settings.
 
-## DNS, domini e condivisioni
+## DNS, domains, and sharing
 
-**DNS:** scegli un preset e premi **Applica DNS**. Le modifiche interessano i servizi di rete abilitati e persistono anche dopo la chiusura dell’app. **DNS originali → Ripristina DNS originali**, oppure `vpnbar dns system`, ripristina i valori salvati. Il backup si trova in `/Library/Application Support/VPNBarNetwork/dns-backup.json`. I preset usano DNS tradizionale; il filtro DNS non elimina tutte le pubblicità.
+**DNS:** Choose a preset and click **Applica DNS** (Apply DNS). Changes affect enabled network services and persist after the app closes. Use **DNS originali → Ripristina DNS originali** (Original DNS → Restore original DNS), or `vpnbar dns system`, to restore the saved settings. The backup is stored at `/Library/Application Support/VPNBarNetwork/dns-backup.json`. Presets use traditional DNS; DNS filtering does not block every advertisement.
 
-**Domini:** associa un nome come `api.progetto.test` a `127.0.0.1`, poi usa, per esempio, `http://api.progetto.test:3000`. Le modifiche sono limitate al blocco gestito da VPNBar in `/etc/hosts` e persistono senza VPN. Wildcard, porte e certificati HTTPS non sono gestiti dalla funzione.
+**Domains:** Map a name such as `api.project.test` to `127.0.0.1`, then open, for example, `http://api.project.test:3000`. Changes are limited to VPNBar's managed block in `/etc/hosts` and persist without a VPN connection. This feature does not support wildcards, ports, or HTTPS certificates.
 
-**Condividi:** avvia il tuo servizio locale, inserisci `http://localhost:3000` e premi **Condividi**. Il [Quick Tunnel](https://developers.cloudflare.com/tunnel/get-started/quick-tunnels/) genera un URL pubblico temporaneo senza account Cloudflare. Chi possiede il link può raggiungere il servizio: usalo per contenuti adatti alla condivisione. **Interrompi** o la chiusura di VPNBar termina il tunnel.
+**Sharing:** Start your local service, enter `http://localhost:3000`, and click **Condividi** (Share). A [Quick Tunnel](https://developers.cloudflare.com/tunnel/get-started/quick-tunnels/) creates a temporary public URL without a Cloudflare account. Anyone with the link can access the service, so use it only for content you intend to share. **Interrompi** (Stop) or quitting VPNBar ends the tunnel.
 
-**Dominio personale:** richiede un tunnel Cloudflare già creato, il dominio instradato al tunnel, il suo UUID e il file credenziali JSON corrispondente. Inserisci questi dati in **Usa il mio dominio**. Conserva il file credenziali fuori dalla repository; VPNBar non crea account, tunnel o record DNS.
+**Custom domain:** This requires an existing Cloudflare tunnel, a domain routed to that tunnel, its UUID, and the corresponding JSON credentials file. Enter these details under **Usa il mio dominio** (Use my domain). Keep the credentials file outside the repository. VPNBar does not create accounts, tunnels, or DNS records.
 
-## Test e struttura
+## Tests and project structure
 
 ```sh
 zsh scripts/test.sh
 ```
 
-I test del core verificano validazione, gestione di `/etc/hosts`, transazioni DNS, rollback e protocollo di controllo. Usano un backend DNS simulato e non modificano la rete del Mac.
+The core tests cover validation, `/etc/hosts` management, DNS transactions and rollback, and the control protocol. They use a simulated DNS backend and do not change your Mac's network settings.
 
-| Percorso | Contenuto |
+| Path | Contents |
 | --- | --- |
-| `Sources/VPNBar/` | App e interfaccia della barra dei menu |
-| `Sources/VPNBarCore/` | Validazione, impostazioni e logica condivisa |
-| `Sources/VPNBarCLI/` | Comando `vpnbar` |
-| `Sources/VPNBarNetwork/` | Helper per DNS e domini locali |
-| `Sources/VPNBarShareAgent/` | Supervisor delle condivisioni |
-| `Resources/` | Metadati dell’app, Comandi Rapidi e licenza di cloudflared |
-| `Tests/` | Test del core |
-| `scripts/` | Download di cloudflared, compilazione e test |
+| `Sources/VPNBar/` | Menu bar app and interface |
+| `Sources/VPNBarCore/` | Validation, settings, and shared logic |
+| `Sources/VPNBarCLI/` | `vpnbar` command |
+| `Sources/VPNBarNetwork/` | Helper for DNS and local domains |
+| `Sources/VPNBarShareAgent/` | Sharing supervisor |
+| `Resources/` | App metadata, Shortcuts, and the cloudflared license |
+| `Tests/` | Core tests |
+| `scripts/` | cloudflared download, build, and test scripts |
 
-## Limiti e dati locali
+## Limitations and local data
 
-VPNBar si affida a Tunnelblick per il tunnel e le credenziali. Non implementa un kill switch; durante una disconnessione o un cambio server il traffico può usare la rete normale. Lo stato connesso non garantisce da solo l’assenza di perdite DNS o IPv6.
+VPNBar relies on Tunnelblick for the tunnel and credentials. It does not implement a kill switch. During a disconnection or server switch, traffic may use your regular network. A connected status alone does not guarantee protection from DNS or IPv6 leaks.
 
-La verifica IP contatta `api.ipify.org`, il ping usa `1.1.1.1` e lo speed test genera traffico tramite `networkQuality`. Questi servizi vedono l’IP usato dalla connessione.
+The public IP check contacts `api.ipify.org`, ping uses `1.1.1.1`, and the speed test generates traffic with `networkQuality`. These services can see the IP address used by your connection.
 
-Le impostazioni dell’app, le richieste della CLI e le configurazioni temporanee delle condivisioni risiedono in `~/Library/Application Support/VPNBar/`. Se imposti `VPNBAR_DATA_DIR`, usa una directory privata fuori dalla repository.
+App settings, CLI requests, and temporary sharing configurations are stored in `~/Library/Application Support/VPNBar/`. If you set `VPNBAR_DATA_DIR`, use a private directory outside the repository.
 
-## Repository GitHub
+## GitHub repository
 
-Il codice sorgente è pubblicato su [gabry848/VPNBar](https://github.com/gabry848/VPNBar). La repository include sorgenti, test, script e risorse necessarie alla compilazione. `.gitignore` esclude profili VPN, chiavi e certificati personali, credenziali, dati runtime, build, log, screenshot di verifica e stato locale degli editor e degli agenti. Il binario cloudflared viene scaricato durante il setup; la sua [licenza Apache-2.0](Resources/cloudflared-LICENSE.txt) è inclusa.
+The source code is published at [gabry848/VPNBar](https://github.com/gabry848/VPNBar). The repository includes the source code, tests, scripts, and resources needed to build the app. `.gitignore` excludes VPN profiles, personal keys and certificates, credentials, runtime data, builds, logs, verification screenshots, and local editor and agent state. The cloudflared binary is downloaded during setup; its [Apache 2.0 license](Resources/cloudflared-LICENSE.txt) is included.
 
-Mantieni profili e credenziali fuori dalla repository. Le esclusioni non riconoscono ogni possibile nome di un file privato e non rimuovono dati già presenti nella cronologia.
+Keep profiles and credentials outside the repository. The ignore rules cannot recognize every possible private filename or remove data already present in Git history.
