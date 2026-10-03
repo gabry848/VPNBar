@@ -32,10 +32,10 @@ swift --version
 xcrun --find swift
 ```
 
-Clona la repository sostituendo `UTENTE` e `NOME-REPOSITORY` con i valori effettivi:
+Clona la repository:
 
 ```sh
-git clone https://github.com/UTENTE/NOME-REPOSITORY.git VPNBar
+git clone https://github.com/gabry848/VPNBar.git
 cd VPNBar
 ```
 
@@ -141,10 +141,8 @@ La verifica IP contatta `api.ipify.org`, il ping usa `1.1.1.1` e lo speed test g
 
 Le impostazioni dell’app, le richieste della CLI e le configurazioni temporanee delle condivisioni risiedono in `~/Library/Application Support/VPNBar/`. Se imposti `VPNBAR_DATA_DIR`, usa una directory privata fuori dalla repository.
 
-## Preparazione per GitHub
+## Repository GitHub
 
-La repository include sorgenti, test, script e risorse necessarie alla compilazione. `.gitignore` esclude profili VPN, chiavi e certificati personali, credenziali, dati runtime, build, log, screenshot di verifica e stato locale degli editor e degli agenti. Il binario cloudflared viene scaricato durante il setup; la sua [licenza Apache-2.0](Resources/cloudflared-LICENSE.txt) è inclusa.
+Il codice sorgente è pubblicato su [gabry848/VPNBar](https://github.com/gabry848/VPNBar). La repository include sorgenti, test, script e risorse necessarie alla compilazione. `.gitignore` esclude profili VPN, chiavi e certificati personali, credenziali, dati runtime, build, log, screenshot di verifica e stato locale degli editor e degli agenti. Il binario cloudflared viene scaricato durante il setup; la sua [licenza Apache-2.0](Resources/cloudflared-LICENSE.txt) è inclusa.
 
 Mantieni profili e credenziali fuori dalla repository. Le esclusioni non riconoscono ogni possibile nome di un file privato e non rimuovono dati già presenti nella cronologia.
-
-Per pubblicare, crea una repository **pubblica e vuota** su GitHub, senza aggiungere README o altri file dal sito. Collega il suo URL come remoto `origin` in GitButler, selezionalo come remoto di pubblicazione e pubblica il branch `github-setup`, che contiene il commit iniziale del progetto. Su GitHub imposta quel branch come predefinito. La preparazione locale non crea né pubblica automaticamente una repository su GitHub.
